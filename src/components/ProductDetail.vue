@@ -14,42 +14,14 @@
           <div>
             <div class="contact_content" style="margin-top: 30px;">
               <div class="contact_profile">
-                  <div class="detail_image" style="float: left;margin-right: 30px;height: 431px;">
+                  <div class="detail_image" style="float: left;margin-right: 30px;height: 500px;">
                     <el-image
                       style="width: 300px; height: 300px;border: #409eff63 solid 2px;"
                       :src="url"
                       :preview-src-list="srcList">
                     </el-image>
-                    <div style="text-align: center;margin-top: 10px;">
-                      <el-button type="primary" plain @click="dialogFormVisible = true"><i class="el-icon-thumb"></i> buy</el-button>
-                    </div>
+                    <product-carousel @clickImg="clickImage" v-show="categoryProductList.length > 0" :category-product-list="categoryProductList" style="margin-bottom: 20px;"></product-carousel>
                   </div>
-                <div>
-                  <!-- dialog表单 -->
-                  <el-dialog title="welcome to corecabe, we will contact you after confirm order !" :visible.sync="dialogFormVisible" center>
-                    <el-form :model="form" ref="form" :rules="rules" style="margin-right: 50px;">
-                      <el-form-item label="Name" prop="name" :label-width="formLabelWidth">
-                        <el-input v-model="form.name" autocomplete="off"></el-input>
-                      </el-form-item>
-                      <el-form-item label="Phone" prop="phone" :label-width="formLabelWidth">
-                        <el-input v-model="form.phone" autocomplete="off"></el-input>
-                      </el-form-item>
-                      <el-form-item label="Mail" prop="mail" :label-width="formLabelWidth">
-                        <el-input v-model="form.mail" autocomplete="off"></el-input>
-                      </el-form-item>
-                      <el-form-item label="Quantity" prop="quantity" :label-width="formLabelWidth">
-                        <el-input v-model.number="form.quantity" autocomplete="off"></el-input>
-                      </el-form-item>
-                      <el-form-item label="Content" prop="content" :label-width="formLabelWidth">
-                        <el-input v-model="form.content" autocomplete="off"></el-input>
-                      </el-form-item>
-                    </el-form>
-                    <div slot="footer" class="dialog-footer">
-                      <el-button @click="cancelForm()">Cancel</el-button>
-                      <el-button type="primary" @click="submitForm('form')">OK</el-button>
-                    </div>
-                  </el-dialog>
-                </div>
                 <div class="detail_text" style="font-size: 17px;margin-right: 15px;">
                   <div>
                     Product name:
@@ -58,8 +30,41 @@
                     Product details:
                     <div v-for="(item) in pDetailDescArr" :key="item" class="product_desc">{{item}}</div>
                   </div>
+                  <div style="margin-top: 10px;">
+                    <div style="font-family: initial;">
+                      <span class="product_price">$&nbsp;<span style="font-size: 25px">{{categoryPrice.split('.')[0]}}</span>.{{categoryPrice.split('.')[1]}}</span>
+                    </div>
+                    <el-button type="primary" plain @click="dialogFormVisible = true"><i class="el-icon-thumb"></i> Buy Now</el-button>
+                  </div>
                 </div>
               </div>
+              <!-- dialog表单 start -->
+              <div>
+                <el-dialog title="welcome to corecabe, we will contact you after confirm order !" :visible.sync="dialogFormVisible" center>
+                  <el-form :model="form" ref="form" :rules="rules" style="margin-right: 50px;">
+                    <el-form-item label="Name" prop="name" :label-width="formLabelWidth">
+                      <el-input v-model="form.name" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="Phone" prop="phone" :label-width="formLabelWidth">
+                      <el-input v-model="form.phone" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="Mail" prop="mail" :label-width="formLabelWidth">
+                      <el-input v-model="form.mail" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="Quantity" prop="quantity" :label-width="formLabelWidth">
+                      <el-input v-model.number="form.quantity" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="Content" prop="content" :label-width="formLabelWidth">
+                      <el-input v-model="form.content" autocomplete="off"></el-input>
+                    </el-form-item>
+                  </el-form>
+                  <div slot="footer" class="dialog-footer">
+                    <el-button @click="cancelForm()">Cancel</el-button>
+                    <el-button type="primary" @click="submitForm('form')">OK</el-button>
+                  </div>
+                </el-dialog>
+              </div>
+              <!-- dialog表单 end -->
             </div>
           </div>
         </div></el-col>
@@ -71,9 +76,10 @@
 <script>
 import Banner from '@/components/common/Banner'
 import LeftMenu from '@/components/common/LeftMenu'
+import ProductCarousel from '@/components/common/ProductCarousel'
 export default {
   name: 'detail',
-  components: {Banner, LeftMenu},
+  components: {ProductCarousel, Banner, LeftMenu},
   data () {
     return {
       activeIndex: '1',
@@ -106,6 +112,8 @@ export default {
       srcList: [
         'static/images/products/1/1/1.png'
       ],
+      categoryPrice: '9.9',
+      categoryProductList: [],
       pNameDesc: 'USB Type C 3.0 Cable, CORECABE USB A to Type C Fast Charging Nylon Braided Cord Compatible with Galaxy S10 S9 S8 Plus Note 9 8，MacBook, iPad Pro 2018,LG V30,V20,G6 and More',
       pDetailDescArr: [
         '【Fast Charging and Sync】:Transfer speed up to 480Mbps, Safe charging at up to 3A is ensured by high-standard components,Super fast charging and Super fast transmission (up to max 5Gbps).',
@@ -171,28 +179,70 @@ export default {
     }
   },
   methods: {
+    // 接收子组件事件,动态改变 商品详情页信息
+    clickImage (img) {
+      // 根据imageUrl动态变化产品介绍文案
+      // this.changeProductDescByImageUrl(img)
+      this.url = img
+      this.srcList = [img]
+    },
+    // 获取相同分类商品列表
+    getTheSameCategoryProductList (categoryId) {
+      if (categoryId === 1) {
+        return this.getProductArr('static/images/products/1/1', 8, 'png')
+      } else if (categoryId === 2) {
+        return this.getProductArr('static/images/products/1/2', 8, 'png')
+      } else if (categoryId === 3) {
+        return this.getProductArr('static/images/products/1/3', 12, 'png')
+      } else if (categoryId === 4) {
+        return this.getProductArr('static/images/products/2', 8, 'png')
+      } else if (categoryId === 5) {
+        return this.getProductArr('static/images/products/3', 8, 'png')
+      }
+    },
+    getProductArr (url, counts, type) {
+      let arr = []
+      for (let i = 1; i <= counts; i++) {
+        let subImgObj = {}
+        let img = url + '/' + i + '.' + type
+        subImgObj.img = img
+        subImgObj.name = img
+        arr.push(subImgObj)
+      }
+      return arr
+    },
     // 根据imageUrl动态变化产品介绍文案
     changeProductDescByImageUrl (imageUrl) {
       if (imageUrl.indexOf('/images/products/1/1/') !== -1) {
         this.pNameDesc = this.pNameDesc
         this.pDetailDescArr = this.pDetailDescArr
         this.activeIndex = '1'
+        this.categoryPrice = '7.99'
+        this.categoryProductList = this.getTheSameCategoryProductList(1)
       } else if (imageUrl.indexOf('/images/products/1/2/') !== -1) {
         this.pNameDesc = this.pNameDesc_2
         this.pDetailDescArr = this.pDetailDescArr_2
         this.activeIndex = '2'
+        this.categoryPrice = '17.99'
+        this.categoryProductList = this.getTheSameCategoryProductList(2)
       } else if (imageUrl.indexOf('/images/products/1/3/') !== -1) {
         this.pNameDesc = this.pNameDesc_3
         this.pDetailDescArr = this.pDetailDescArr_3
         this.activeIndex = '3'
+        this.categoryPrice = '9.99'
+        this.categoryProductList = this.getTheSameCategoryProductList(3)
       } else if (imageUrl.indexOf('/images/products/2/') !== -1) {
         this.pNameDesc = this.pNameDesc_4
         this.pDetailDescArr = this.pDetailDescArr_4
         this.activeIndex = '4'
+        this.categoryPrice = '9.99'
+        this.categoryProductList = this.getTheSameCategoryProductList(4)
       } else if (imageUrl.indexOf('/images/products/3/') !== -1) {
         this.pNameDesc = this.pNameDesc_5
         this.pDetailDescArr = this.pDetailDescArr_5
         this.activeIndex = '5'
+        this.categoryPrice = '10.99'
+        this.categoryProductList = this.getTheSameCategoryProductList(5)
       }
     },
     change (categoryName) {
