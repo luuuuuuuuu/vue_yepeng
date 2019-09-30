@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <el-container>
-      <el-header height="185px" style="margin-top: -10px;">
+      <el-header height="105px" style="margin-top: -10px;">
         <el-row>
           <div class="header_top_text">Welcom To Visit Our Web: <a href="http://www.corecabe.com">http://www.corecabe.com</a></div>
           <el-divider content-position="left"></el-divider>
@@ -16,9 +16,10 @@
             </div>-->
           </el-col>
         </el-row>
-        <Tab :menu-items="menuItems"></Tab>
       </el-header>
       <el-main>
+        <Tab></Tab>
+        <el-divider></el-divider>
         <keep-alive>
           <router-view/>
         </keep-alive>
@@ -40,7 +41,6 @@
 
 <script>
 import Tab from '@/components/common/Tab'
-
 export default {
   name: 'App',
   components: {

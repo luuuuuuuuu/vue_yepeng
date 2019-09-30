@@ -5,7 +5,7 @@
         <el-menu
           :default-active="activeIndex"
           class="el-menu-vertical-demo"
-          style="width: 80%;"
+          style="width: 100%;"
           @select="handleSelect"
         >
           <el-submenu index="3">

@@ -25,8 +25,6 @@ export default {
   },
   methods: {
     clickImg (img) {
-      // console.log('productcarousel  clickImg')
-      // console.log(img)
       // 事件传递
       this.$emit('clickImg', img)
     }

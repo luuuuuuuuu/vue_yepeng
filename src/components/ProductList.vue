@@ -48,7 +48,7 @@ export default {
     watchStorage (newVal, oldVal) {
       if (newVal !== '2' && newVal !== '3') {
         this.productList = this.categoryProductData['USB-C CABLE'][newVal]
-        this.activeIndex = '3'
+        this.activeIndex = newVal
         this.productName = 'USB-C CABLE' + ' > ' + newVal
       } else if (newVal === '2') {
         this.productList = this.categoryProductData['HDMI CABLE']
@@ -57,6 +57,7 @@ export default {
       } else if (newVal === '3') {
         this.productList = this.categoryProductData['DISPLAYPORT CABLE']
         this.productName = 'DISPLAYPORT CABLE'
+        this.activeIndex = '5'
       }
     }
   },
@@ -64,23 +65,53 @@ export default {
     // banner点击进入
     let bannerIndex = this.$route.params.bannerIndex
     if (bannerIndex !== undefined) {
-      // if (bannerIndex === '0') {
-      //   this.resetSetItem('watchStorage', 'A-C')
-      // } else if (bannerIndex === '1') {
-      //   this.resetSetItem('watchStorage', 'C-C with E-marker')
-      // } else if (bannerIndex === '2') {
-      //   this.resetSetItem('watchStorage', 'C-usb3.0 AF')
-      // } else if (bannerIndex === '3') {
-      //   this.resetSetItem('watchStorage', '2')
-      // } else if (bannerIndex === '4') {
-      //   this.resetSetItem('watchStorage', '3')
-      // }
+      console.log('banner click bannerIndex ')
+      console.log(bannerIndex)
+      if (bannerIndex === '0') {
+        this.resetSetItem('watchStorage', 'A-C')
+      } else if (bannerIndex === '1') {
+        this.resetSetItem('watchStorage', 'C-C with E-marker')
+      } else if (bannerIndex === '2') {
+        this.resetSetItem('watchStorage', 'C-usb3.0 AF')
+      } else if (bannerIndex === '3') {
+        this.resetSetItem('watchStorage', '2')
+      } else if (bannerIndex === '4') {
+        this.resetSetItem('watchStorage', '3')
+      }
+      // 首次从banner进入
+      if (bannerIndex === 0) {
+        this.productList = this.categoryProductData['USB-C CABLE']['A-C']
+        this.activeIndex = '1'
+        this.productName = 'USB-C CABLE' + '  ' + 'A-C'
+      } else if (bannerIndex === 1) {
+        this.productList = this.categoryProductData['USB-C CABLE']['C-C with E-marker']
+        this.activeIndex = '2'
+        this.productName = 'USB-C CABLE' + '  ' + 'C-C with E-marker'
+      } else if (bannerIndex === 2) {
+        this.productList = this.categoryProductData['USB-C CABLE']['C-usb3.0 AF']
+        this.activeIndex = '3'
+        this.productName = 'USB-C CABLE' + '  ' + 'C-usb3.0 AF'
+      } else if (bannerIndex === 3) {
+        this.productList = this.categoryProductData['HDMI CABLE']
+        this.activeIndex = '4'
+        this.productName = 'HDMI CABLE'
+        this.tabIndex = '4'
+      } else if (bannerIndex === 4) {
+        this.productList = this.categoryProductData['DISPLAYPORT CABLE']
+        this.productName = 'DISPLAYPORT CABLE'
+        this.tabIndex = '5'
+      }
     }
     // 从 顶部 Tab 点击 (顶部路由 传值)
     let keyPath = this.$route.params.keyPath
     if (keyPath !== undefined) {
+      console.log('tab click keyPath')
+      console.log(keyPath)
+      console.log('this.watchStorage')
+      console.log(this.watchStorage)
       // 1含有子菜单,  2 3 不含
       if (this.watchStorage === '1') {
+        console.log('11111111111')
         this.productList = this.categoryProductData['USB-C CABLE'][keyPath[1]]
         this.activeIndex = '3'
         this.productName = 'USB-C CABLE' + '  ' + [keyPath[1]]
@@ -108,7 +139,7 @@ export default {
       'C-usb3.0 AF': this.getProductArr('static/images/products/1/3', 12, 'png')
     }
     const HDMI_CABLE = this.getProductArr('static/images/products/2', 8, 'png')
-    const DISPLAYPORT_CABLE = this.getProductArr('static/images/products/3', 8, 'png')
+    const DISPLAYPORT_CABLE = this.getProductArr('static/images/products/3', 6, 'png')
     return {
       productName: 'USB-C CABLE > A-C',
       productList: [],
@@ -119,10 +150,14 @@ export default {
       },
       categoryNameList: [],
       activeIndex: '',
-      watchStorage: '1'
+      watchStorage: '1',
+      tabIndex: '3'
     }
   },
   methods: {
+    tabHandleSelect () {
+      console.log('pList.vue  tab  click')
+    },
     changeDataByRouterKeyPath () {
       let keyPath = this.$route.params.keyPath
       if (keyPath !== undefined) {

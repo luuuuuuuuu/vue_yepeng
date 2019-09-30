@@ -14,7 +14,7 @@
           <div>
             <div class="contact_content" style="margin-top: 30px;">
               <div class="contact_profile">
-                  <div class="detail_image" style="float: left;margin-right: 30px;height: 500px;">
+                  <div class="detail_image" style="float: left;margin-right: 30px;height: 630px;">
                     <el-image
                       style="width: 300px; height: 300px;border: #409eff63 solid 2px;"
                       :src="url"
@@ -30,11 +30,14 @@
                     Product details:
                     <div v-for="(item) in pDetailDescArr" :key="item" class="product_desc">{{item}}</div>
                   </div>
-                  <div style="margin-top: 10px;">
+                  <div style="margin-top: 20px;">
+                    Product Price:
                     <div style="font-family: initial;">
-                      <span class="product_price">$&nbsp;<span style="font-size: 25px">{{categoryPrice.split('.')[0]}}</span>.{{categoryPrice.split('.')[1]}}</span>
+                      <span class="product_price" style="margin-left: 10px;">$&nbsp;<span style="font-size: 25px">{{categoryPrice.split('.')[0]}}</span>.{{categoryPrice.split('.')[1]}}</span>
                     </div>
-                    <el-button type="primary" plain @click="dialogFormVisible = true"><i class="el-icon-thumb"></i> Buy Now</el-button>
+                    <el-input-number v-model="form.quantity" @change="handleChange" size="small" :min="1" :max="1000" label="描述文字"></el-input-number>
+                    <br>
+                    <el-button style="margin-top: 10px;" type="primary" plain @click="dialogFormVisible = true"><i class="el-icon-thumb"></i> Buy Now</el-button>
                   </div>
                 </div>
               </div>
@@ -52,7 +55,7 @@
                       <el-input v-model="form.mail" autocomplete="off"></el-input>
                     </el-form-item>
                     <el-form-item label="Quantity" prop="quantity" :label-width="formLabelWidth">
-                      <el-input v-model.number="form.quantity" autocomplete="off"></el-input>
+                      <el-input-number v-model="form.quantity" @change="handleChange" :min="1" :max="100" label="描述文字"></el-input-number>
                     </el-form-item>
                     <el-form-item label="Content" prop="content" :label-width="formLabelWidth">
                       <el-input v-model="form.content" autocomplete="off"></el-input>
@@ -197,7 +200,7 @@ export default {
       } else if (categoryId === 4) {
         return this.getProductArr('static/images/products/2', 8, 'png')
       } else if (categoryId === 5) {
-        return this.getProductArr('static/images/products/3', 8, 'png')
+        return this.getProductArr('static/images/products/3', 6, 'png')
       }
     },
     getProductArr (url, counts, type) {
@@ -275,6 +278,8 @@ export default {
       }
       // 无效
       this.$refs[formName].resetFields()
+    },
+    handleChange (value) {
     }
   }
 }
